@@ -1,30 +1,13 @@
-# [base](https://github.com/jsmini/base) 
+# [clone](https://github.com/jsmini/clone) 
 
-[![](https://img.shields.io/badge/Powered%20by-jslib%20base-brightgreen.svg)](https://github.com/yanhaijing/jslib-base)
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/jsmini/base/blob/master/LICENSE)
-[![Build Status](https://travis-ci.org/jsmini/base.svg?branch=master)](https://travis-ci.org/jsmini/base)
-[![npm](https://img.shields.io/badge/npm-0.2.0-orange.svg)](https://www.npmjs.com/package/base)
-[![NPM downloads](http://img.shields.io/npm/dm/@jsmini/base.svg?style=flat-square)](http://www.npmtrends.com/@jsmini/base)
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/jsmini/base.svg)](http://isitmaintained.com/project/jsmini/base "Percentage of issues still open")
+[![](https://img.shields.io/badge/Powered%20by-jslib%20clone-brightgreen.svg)](https://github.com/yanhaijing/jslib-clone)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/jsmini/clone/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/jsmini/clone.svg?branch=master)](https://travis-ci.org/jsmini/clone)
+[![npm](https://img.shields.io/badge/npm-0.2.0-orange.svg)](https://www.npmjs.com/package/clone)
+[![NPM downloads](http://img.shields.io/npm/dm/@jsmini/clone.svg?style=flat-square)](http://www.npmtrends.com/@jsmini/clone)
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/jsmini/clone.svg)](http://isitmaintained.com/project/jsmini/clone "Percentage of issues still open")
 
-最好用的js第三方库脚手架，fork或clone本仓库，即可搭建完成一个新库的基础框架
-
-## 特性
-
-- ES6编写源码，编译生成生产代码
-- 集成 babel-runtime (默认关闭)
-- 第三方依赖自动注入（自动剔除第三方依赖无用代码tree shaking）
-- 多环境支持（支持浏览器原生，支持AMD，CMD，支持Webpack，Rollup，fis等，支持Node）
-- 集成单元测试环境
-- 集成代码风格校验eslint
-- 集成可持续构建工具[travis-ci](https://www.travis-ci.org/)
-- 支持自定义banner
-- 集成[jsmini](https://github.com/jsmini)
-- 集成ISSUE_TEMPLATE
-- 支持[sideEffects](https://juejin.im/post/5b4ff9ece51d45190c18bb65)
-- 支持一键重命名
-
-**注意:** 如果不同时使用 export 与 export default 可打开legacy模式，legacy模式下的模块系统可以兼容ie6-8，见rollup配置文件
+最专业的深拷贝库
 
 ## 兼容性
 单元测试保证支持如下环境：
@@ -52,41 +35,41 @@
 通过npm下载安装代码
 
 ```bash
-$ npm install --save @jsmini/base
+$ npm install --save @jsmini/clone
 ```
 
 如果你是node环境
 
 ```js
-var name = require('@jsmini/base').name;
+var name = require('@jsmini/clone').name;
 ```
 
 如果你是webpack等环境
 
 ```js
-import { name } from '@jsmini/base';
+import { name } from '@jsmini/clone';
 ```
 
 如果你是requirejs环境
 
 ```js
-requirejs(['node_modules/@jsmini/base/dist/index.aio.js'], function (jsmini_base) {
-    var name = jsmini_base.name;
+requirejs(['node_modules/@jsmini/clone/dist/index.aio.js'], function (jsmini_clone) {
+    var name = jsmini_clone.name;
 })
 ```
 
 如果你是浏览器环境
 
 ```html
-<script src="node_modules/@jsmini/base/dist/index.aio.js"></script>
+<script src="node_modules/@jsmini/clone/dist/index.aio.js"></script>
 
 <script>
-    var name = jsmini_base.name;
+    var name = jsmini_clone.name;
 </script>
 ```
 
 ## 文档
-[API](https://github.com/jsmini/base/blob/master/doc/api.md)
+[API](https://github.com/jsmini/clone/blob/master/doc/api.md)
 
 ## 贡献指南
 首次运行需要先安装依赖
@@ -131,13 +114,13 @@ $ npm run rename # 重命名命令
 ```
 
 ## 贡献者列表
-[contributors](https://github.com/jsmini/base/graphs/contributors)
+[contributors](https://github.com/jsmini/clone/graphs/contributors)
 
 ## 更新日志
-[CHANGELOG.md](https://github.com/jsmini/base/blob/master/CHANGELOG.md)
+[CHANGELOG.md](https://github.com/jsmini/clone/blob/master/CHANGELOG.md)
 
 ## 计划列表
-[TODO.md](https://github.com/jsmini/base/blob/master/TODO.md)
+[TODO.md](https://github.com/jsmini/clone/blob/master/TODO.md)
 
 ## 谁在使用
 

@@ -1,5 +1,5 @@
 {
-  "name": "@jsmini/base",
+  "name": "@jsmini/clone",
   "version": "0.2.0",
   "description": "最好用的js第三方库脚手架",
   "main": "dist/index.js",
@@ -21,10 +21,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/jsmini/base.git"
+    "url": "git://github.com/jsmini/clone.git"
   },
   "bugs": {
-    "url": "https://github.com/jsmini/base/issues"
+    "url": "https://github.com/jsmini/clone/issues"
   },
   "devDependencies": {
     "babel-core": "6.26.0",
