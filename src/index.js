@@ -11,8 +11,6 @@ function isClone(x) {
     return t === 'object' || t === 'array';
 }
 
-function cloneDeep(x, force = false) {
-}
 // 递归
 export function clone(x) {
     if (!isClone(x)) return x;
@@ -93,7 +91,7 @@ export function cloneLoop(x) {
         if (tt === 'array') {
             for (let i = 0; i < data.length; i++) {
                 // 避免一层死循环 a.b = a
-                if (data !== data[i] && isClone(data[i])) {
+                if (isClone(data[i]) && data !== data[i]) {
                     // 下一次循环
                     loopList.push({
                         parent: res,
@@ -108,7 +106,7 @@ export function cloneLoop(x) {
             for(let k in data) {
                 if (hasOwnProp(data, k)) {
                     // 避免一层死循环 a.b = a
-                    if (data !== data[k] && isClone(data[k])) {
+                    if (isClone(data[k]) && data !== data[k]) {
                         // 下一次循环
                         loopList.push({
                             parent: res,
@@ -126,10 +124,94 @@ export function cloneLoop(x) {
     return root;
 }
 
+function find(arr, item) {
+    for(let i = 0; i < arr.length; i++) {
+        if (arr[i].source === item) return arr[i];
+    }
+
+    return null;
+}
 // 保持引用关系
 export function cloneForce(x) {
-    if (!isClone(x)) return x;
+    const uniqueList = []; // 用来去重
+    const t = type(x);
 
-    const arr = [];
+    let root = x;
 
+    if (t === 'array') {
+        root = [];
+    } else if (t === 'object') {
+        root = {}
+    }
+
+    // 循环数组
+    const loopList = [
+        {
+            parent: root,
+            key: undefined,
+            data: x,
+        }
+    ];
+
+    while(loopList.length) {
+        // 深度优先
+        const node = loopList.pop();
+        const parent = node.parent;
+        const key = node.key;
+        const data = node.data;
+        const tt = type(data);
+
+        // 初始化赋值目标，key为undefined则拷贝到父元素，否则拷贝到子元素
+        let res = parent;
+        if (typeof key !== 'undefined') {
+            res = parent[key] = tt === 'array' ? [] : {};
+        }
+
+        // 数据已经存在
+        if (let uniqueData = find(uniqueList, x)) {
+            res = uniqueData.target;
+            break; // 中断本次循环
+        }
+
+        // 数据不存在
+        // 保存源数据，在拷贝数据中对应的引用
+        uniqueList.push({
+            source: x,
+            target: res,
+        });
+
+        if (tt === 'array') {
+            for (let i = 0; i < data.length; i++) {
+                if (isClone(data[i]) && !find(uniqueList, data[i])) {
+                    // 保持引用关系
+                    // 下一次循环
+                    loopList.push({
+                        parent: res,
+                        key: i,
+                        data: data[i],
+                    });
+                } else {
+                    res[i] = data[i];
+                }
+            }
+        } else if (tt === 'object'){
+            for(let k in data) {
+                if (hasOwnProp(data, k)) {
+                    if (isClone(data[k]) && !find(uniqueList, data[k])) {
+                        // 保持引用关系
+                        // 下一次循环
+                        loopList.push({
+                            parent: res,
+                            key: k,
+                            data: data[k],
+                        });
+                    } else {
+                        res[i] = data[i];
+                    }
+                }
+            }
+        }
+    }
+
+    return root;
 }
