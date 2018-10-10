@@ -85,7 +85,8 @@ export function cloneLoop(x) {
 
         if (tt === 'array') {
             for (let i = 0; i < data.length; i++) {
-                if (isClone(data[i])) {
+                // 避免一层死循环 a.b = a
+                if (data !== data[i] && isClone(data[i])) {
                     // 下一次循环
                     loopList.push({
                         parent: res,
@@ -99,7 +100,8 @@ export function cloneLoop(x) {
         } else if (tt === 'object'){
             for(let k in data) {
                 if (hasOwnProp(data, k)) {
-                    if (isClone(data[k])) {
+                    // 避免一层死循环 a.b = a
+                    if (data !== data[k] && isClone(data[k])) {
                         // 下一次循环
                         loopList.push({
                             parent: res,
