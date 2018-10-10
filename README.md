@@ -123,10 +123,3 @@ $ npm run rename # 重命名命令
 [TODO.md](https://github.com/jsmini/clone/blob/master/TODO.md)
 
 ## 谁在使用
-
-- [type](https://github.com/jsmini/type)
-- [is](https://github.com/jsmini/is)
-- [guid](https://github.com/jsmini/guid)
-- [inherits](https://github.com/jsmini/inherits)
-- [event](https://github.com/jsmini/event)
-- [console](https://github.com/jsmini/console)
