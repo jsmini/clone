@@ -1,4 +1,4 @@
-# [clone](https://github.com/jsmini/clone) 
+# [clone](https://github.com/jsmini/clone)
 
 [![](https://img.shields.io/badge/Powered%20by-jslib%20clone-brightgreen.svg)](https://github.com/yanhaijing/jslib-clone)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/jsmini/clone/blob/master/LICENSE)
