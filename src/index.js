@@ -23,13 +23,14 @@ export function clone(x) {
         res = [];
         for (let i = 0; i < x.length; i++) {
             // 避免一层死循环 a.b = a
-            res[i] = x === x[i] ? x[i]: clone(x[i]);
+            res[i] = x[i] === x ? res: clone(x[i]);
         }
     } else if (t === 'object') {
         res = {};
         for(let key in x) {
             if (hasOwnProp(x, key)) {
-                res[key] = x === x[key] ? x[key]: clone(x[key]);
+                // 避免一层死循环 a.b = a
+                res[key] = x[key] === x ? res : clone(x[key]);
             }
         }
     }
@@ -91,7 +92,9 @@ export function cloneLoop(x) {
         if (tt === 'array') {
             for (let i = 0; i < data.length; i++) {
                 // 避免一层死循环 a.b = a
-                if (isClone(data[i]) && data !== data[i]) {
+                if (data[i] === data) {
+                    res[i] = res;
+                } else if (isClone(data[i])) {
                     // 下一次循环
                     loopList.push({
                         parent: res,
@@ -106,7 +109,9 @@ export function cloneLoop(x) {
             for(let k in data) {
                 if (hasOwnProp(data, k)) {
                     // 避免一层死循环 a.b = a
-                    if (isClone(data[k]) && data !== data[k]) {
+                    if (data[k] === data) {
+                        res[k] = res;
+                    } else if (isClone(data[k])) {
                         // 下一次循环
                         loopList.push({
                             parent: res,
@@ -126,7 +131,9 @@ export function cloneLoop(x) {
 
 function find(arr, item) {
     for(let i = 0; i < arr.length; i++) {
-        if (arr[i].source === item) return arr[i];
+        if (arr[i].source === item) {
+            return arr[i];
+        }
     }
 
     return null;
@@ -169,15 +176,15 @@ export function cloneForce(x) {
 
         // 数据已经存在
         let uniqueData;
-        if (uniqueData = find(uniqueList, x)) {
-            res = uniqueData.target;
+        if (uniqueData = find(uniqueList, data)) {
+            parent[key] = uniqueData.target;
             break; // 中断本次循环
         }
 
         // 数据不存在
         // 保存源数据，在拷贝数据中对应的引用
         uniqueList.push({
-            source: x,
+            source: data,
             target: res,
         });
 
