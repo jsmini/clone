@@ -57,27 +57,34 @@ export function cloneJSON(x, errOrDef = true) {
 
 // 循环
 export function cloneLoop(x) {
-    if (!isClone(x)) return x;
-
     const t = type(x);
 
-    const root = t === 'array' ? [] : {};
+    let root = x;
 
+    if (t === 'array') {
+        root = [];
+    } else if (t === 'object') {
+        root = {}
+    }
+
+    // 循环数组
     const loopList = [
         {
             parent: root,
+            key: undefined,
             data: x,
         }
     ];
 
     while(loopList.length) {
+        // 深度优先
         const node = loopList.pop();
         const parent = node.parent;
         const key = node.key;
         const data = node.data;
         const tt = type(data);
 
-        // 初始化赋值目标
+        // 初始化赋值目标，key为undefined则拷贝到父元素，否则拷贝到子元素
         let res = parent;
         if (typeof key !== 'undefined') {
             res = parent[key] = tt === 'array' ? [] : {};
