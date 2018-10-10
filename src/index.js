@@ -1,6 +1,9 @@
 import { type } from '@jsmini/type';
 
-const emptyObj = {};
+// Object.create(null) 的对象，没有hasOwnProperty方法
+function hasOwnProp(obj, key) {
+    return Object.prototype.hasOwnProperty.call(obj, key);
+}
 
 // 仅对对象和数组进行深拷贝，其他类型，直接返回
 function isClone(x) {
@@ -8,6 +11,8 @@ function isClone(x) {
     return t === 'object' || t === 'array';
 }
 
+function cloneDeep(x, force = false) {
+}
 // 递归
 export function clone(x) {
     if (!isClone(x)) return x;
@@ -25,7 +30,7 @@ export function clone(x) {
     } else if (t === 'object') {
         res = {};
         for(let key in x) {
-            if (x.hasOwnProperty(key)) {
+            if (hasOwnProp(x, key)) {
                 res[key] = x === x[key] ? x[key]: clone(x[key]);
             }
         }
@@ -52,10 +57,70 @@ export function cloneJSON(x, errOrDef = true) {
 
 // 循环
 export function cloneLoop(x) {
+    if (!isClone(x)) return x;
 
+    const t = type(x);
+
+    const root = t === 'array' ? [] : {};
+
+    const loopList = [
+        {
+            parent: root,
+            data: x,
+        }
+    ];
+
+    while(loopList.length) {
+        const node = loopList.pop();
+        const parent = node.parent;
+        const key = node.key;
+        const data = node.data;
+        const tt = type(data);
+
+        // 初始化赋值目标
+        let res = parent;
+        if (typeof key !== 'undefined') {
+            res = parent[key] = tt === 'array' ? [] : {};
+        }
+
+        if (tt === 'array') {
+            for (let i = 0; i < data.length; i++) {
+                if (isClone(data[i])) {
+                    // 下一次循环
+                    loopList.push({
+                        parent: res,
+                        key: i,
+                        data: data[i],
+                    });
+                } else {
+                    res[i] = data[i];
+                }
+            }
+        } else if (tt === 'object'){
+            for(let k in data) {
+                if (hasOwnProp(data, k)) {
+                    if (isClone(data[k])) {
+                        // 下一次循环
+                        loopList.push({
+                            parent: res,
+                            key: k,
+                            data: data[k],
+                        });
+                    } else {
+                        res[k] = data[k];
+                    }
+                }
+            }
+        }
+    }
+
+    return root;
 }
 
 // 保持引用关系
 export function cloneForce(x) {
+    if (!isClone(x)) return x;
+
+    const arr = [];
 
 }
