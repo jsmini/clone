@@ -168,7 +168,8 @@ export function cloneForce(x) {
         }
 
         // 数据已经存在
-        if (let uniqueData = find(uniqueList, x)) {
+        let uniqueData;
+        if (uniqueData = find(uniqueList, x)) {
             res = uniqueData.target;
             break; // 中断本次循环
         }
@@ -182,8 +183,7 @@ export function cloneForce(x) {
 
         if (tt === 'array') {
             for (let i = 0; i < data.length; i++) {
-                if (isClone(data[i]) && !find(uniqueList, data[i])) {
-                    // 保持引用关系
+                if (isClone(data[i])) {
                     // 下一次循环
                     loopList.push({
                         parent: res,
@@ -197,8 +197,7 @@ export function cloneForce(x) {
         } else if (tt === 'object'){
             for(let k in data) {
                 if (hasOwnProp(data, k)) {
-                    if (isClone(data[k]) && !find(uniqueList, data[k])) {
-                        // 保持引用关系
+                    if (isClone(data[k])) {
                         // 下一次循环
                         loopList.push({
                             parent: res,
@@ -206,7 +205,7 @@ export function cloneForce(x) {
                             data: data[k],
                         });
                     } else {
-                        res[i] = data[i];
+                        res[k] = data[k];
                     }
                 }
             }
