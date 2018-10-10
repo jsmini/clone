@@ -1,6 +1,6 @@
 {
   "name": "@jsmini/clone",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "最好用的js第三方库脚手架",
   "main": "dist/index.js",
   "jsnext:main": "dist/index.esm.js",
@@ -42,7 +42,7 @@
     "rollup-plugin-node-resolve": "3.0.3"
   },
   "dependencies": {
-    "@jsmini/type": "0.4.0",
+    "@jsmini/type": "0.4.1",
     "babel-runtime": "6.26.0"
   }
 }

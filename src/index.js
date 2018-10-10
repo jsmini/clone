@@ -63,7 +63,7 @@ export function cloneLoop(x) {
     if (t === 'array') {
         root = [];
     } else if (t === 'object') {
-        root = {}
+        root = {};
     }
 
     // 循环数组
@@ -148,7 +148,7 @@ export function cloneForce(x) {
     if (t === 'array') {
         root = [];
     } else if (t === 'object') {
-        root = {}
+        root = {};
     }
 
     // 循环数组
@@ -175,8 +175,8 @@ export function cloneForce(x) {
         }
 
         // 数据已经存在
-        let uniqueData;
-        if (uniqueData = find(uniqueList, data)) {
+        let uniqueData = find(uniqueList, data);
+        if (uniqueData) {
             parent[key] = uniqueData.target;
             break; // 中断本次循环
         }
