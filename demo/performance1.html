@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>运行指定次数需要的时间</title>
+</head>
+<body>
+    <script src="../dist/index.aio.js"></script>
+    <script>
+        var clone = jsmini_clone.clone;
+        var cloneJSON = jsmini_clone.cloneJSON;
+        var cloneLoop = jsmini_clone.cloneLoop;
+        var cloneForce = jsmini_clone.cloneForce;
+
+        var data = {};
+        var temp = data;
+        for(var i = 0; i < 500; i++) {
+            temp = temp['data'] = {};
+            for (var j = 0; j < 10; j++) {
+                temp[j] = j;
+            }
+        }
+
+        function runCount(fn, count) {
+            var time = Date.now();
+            while(count--) {
+                fn()
+            }
+
+            return Date.now() - time;
+        }
+
+        function run(list) {
+            if (list.length === 0) return;
+
+            console.log('运行1000次需要的时间：', list[0]());
+
+            setTimeout(function () {run(list.slice(1))}, 1000);
+        }
+
+        var list = [
+            function () {return runCount(function() {clone(data)}, 1000)},
+            function () {return runCount(function() {cloneJSON(data)}, 1000)},
+            function () {return runCount(function() {cloneLoop(data)}, 1000)},
+            function () {return runCount(function() {cloneForce(data)}, 1000)},
+        ];
+        run(list)
+    </script>
+</body>
+</html>

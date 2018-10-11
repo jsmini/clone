@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <script src="../dist/index.aio.js"></script>
+    <script>
+        var clone = jsmini_clone.clone;
+        var cloneJSON = jsmini_clone.cloneJSON;
+        var cloneLoop = jsmini_clone.cloneLoop;
+        var cloneForce = jsmini_clone.cloneForce;
+
+        var data = {};
+        var temp = data;
+        for (var i = 0; i < 1000 * 20; i++) {
+            temp = temp['data'] = {};
+        }
+
+        console.log('cloneLoop start');
+        try {
+            cloneLoop(data);
+        } catch(e) {
+            console.log('cloneLoop', e.message);
+        }
+        console.log('cloneLoop end');
+
+        console.log('cloneForce start');
+        // 层级多了会卡死，日
+        try {
+            cloneForce(data);
+        } catch(e) {
+            console.log('cloneForce', e.message);
+        }
+        console.log('cloneForce end');
+
+        console.log('clone start');
+        try {
+            clone(data);
+        } catch(e) {
+            console.log('clone', e.message);
+        }
+        console.log('clone end');
+
+        console.log('cloneJSON start');
+        try {
+            cloneJSON(data);
+        } catch(e) {
+            console.log('cloneJSON', e.message);
+        }
+        console.log('cloneJSON end');
+    </script>
+</body>
+</html>

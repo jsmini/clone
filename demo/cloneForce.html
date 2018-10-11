@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <script src="../dist/index.aio.js"></script>
+    <script>
+        var cloneForce = jsmini_clone.cloneForce;
+
+        var data = {};
+        var temp = data;
+        for (var i = 0; i < 1000 * 50; i++) {
+            temp = temp['data'] = {};
+        }
+
+        console.log('cloneForce start');
+        var time =Date.now();
+        // 层级多了会卡死，日
+        try {
+            cloneForce(data);
+        } catch(e) {
+            console.log('cloneForce', e.message);
+        }
+        console.log('cloneForce end，耗时：', Date.now() - time);
+    </script>
+</body>
+</html>
