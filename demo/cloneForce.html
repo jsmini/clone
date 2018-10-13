@@ -6,24 +6,13 @@
 </head>
 <body>
     <script src="../dist/index.aio.js"></script>
+    <script src="js/comm.js"></script>
     <script>
         var cloneForce = jsmini_clone.cloneForce;
 
-        var data = {};
-        var temp = data;
-        for (var i = 0; i < 1000 * 20; i++) {
-            temp = temp['data'] = {};
-        }
+        var data = createData(1000 * 20, 0);
 
-        console.log('cloneForce start');
-        var time =Date.now();
-        // 层级多了会卡死，日
-        try {
-            cloneForce(data);
-        } catch(e) {
-            console.log('cloneForce', e.message);
-        }
-        console.log('cloneForce end，耗时：', Date.now() - time);
+        safeRun('cloneForce', function () { cloneForce(data) })
     </script>
 </body>
 </html>

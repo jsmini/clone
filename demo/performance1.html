@@ -6,29 +6,9 @@
 </head>
 <body>
     <script src="../dist/index.aio.js"></script>
+    <script src="js/comm.js"></script>
     <script>
-        var clone = jsmini_clone.clone;
-        var cloneJSON = jsmini_clone.cloneJSON;
-        var cloneLoop = jsmini_clone.cloneLoop;
-        var cloneForce = jsmini_clone.cloneForce;
-
-        var data = {};
-        var temp = data;
-        for(var i = 0; i < 500; i++) {
-            temp = temp['data'] = {};
-            for (var j = 0; j < 10; j++) {
-                temp[j] = j;
-            }
-        }
-
-        function runCount(fn, count) {
-            var time = Date.now();
-            while(count--) {
-                fn()
-            }
-
-            return Date.now() - time;
-        }
+        var data = createData(500, 10);
 
         function run(list) {
             if (list.length === 0) return;
