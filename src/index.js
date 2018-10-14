@@ -178,7 +178,7 @@ export function cloneForce(x) {
         let uniqueData = find(uniqueList, data);
         if (uniqueData) {
             parent[key] = uniqueData.target;
-            break; // 中断本次循环
+            continue; // 中断本次循环
         }
 
         // 数据不存在

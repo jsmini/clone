@@ -10,9 +10,17 @@
     <script>
         var cloneForce = jsmini_clone.cloneForce;
 
-        var data = createData(1000 * 20, 0);
+        var data1 = createData(2000, 0);
+        var data2 = createData(4000, 0);
+        var data3 = createData(6000, 0);
+        var data4 = createData(8000, 0);
+        var data5 = createData(10000, 0);
 
-        safeRun('cloneForce', function () { cloneForce(data) })
+        safeRun('cloneForce', function () { cloneForce(data1) })
+        safeRun('cloneForce', function () { cloneForce(data2) })
+        safeRun('cloneForce', function () { cloneForce(data3) })
+        safeRun('cloneForce', function () { cloneForce(data4) })
+        safeRun('cloneForce', function () { cloneForce(data5) })
     </script>
 </body>
 </html>
