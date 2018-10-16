@@ -11,6 +11,16 @@ function isClone(x) {
     return t === 'object' || t === 'array';
 }
 
+function generateUUID() {
+    let d = new Date().getTime();
+    let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        let r = (d + Math.random() * 16 ) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+}
+
 // 递归
 export function clone(x) {
     if (!isClone(x)) return x;
@@ -129,19 +139,11 @@ export function cloneLoop(x) {
     return root;
 }
 
-function find(arr, item) {
-    for(let i = 0; i < arr.length; i++) {
-        if (arr[i].source === item) {
-            return arr[i];
-        }
-    }
-
-    return null;
-}
 // 保持引用关系
 export function cloneForce(x) {
-    const uniqueList = []; // 用来去重
+    const uniqueList = [];
     const t = type(x);
+    const uniqueKey = generateUUID();
 
     let root = x;
 
@@ -174,19 +176,22 @@ export function cloneForce(x) {
             res = parent[key] = tt === 'array' ? [] : {};
         }
 
+
+
         // 数据已经存在
-        let uniqueData = find(uniqueList, data);
-        if (uniqueData) {
-            parent[key] = uniqueData.target;
-            continue; // 中断本次循环
+
+        if(isClone(data)){
+            if(data[uniqueKey]){
+                parent[key] = data[uniqueKey];
+                continue;
+            }
+            // 数据不存在
+            // 保存源数据，在拷贝数据中对应的引用
+            data[uniqueKey] = res;
+            uniqueList.push(data);
         }
 
-        // 数据不存在
-        // 保存源数据，在拷贝数据中对应的引用
-        uniqueList.push({
-            source: data,
-            target: res,
-        });
+        
 
         if (tt === 'array') {
             for (let i = 0; i < data.length; i++) {
@@ -203,6 +208,7 @@ export function cloneForce(x) {
             }
         } else if (tt === 'object'){
             for(let k in data) {
+                if (k == uniqueKey) continue;
                 if (hasOwnProp(data, k)) {
                     if (isClone(data[k])) {
                         // 下一次循环
@@ -218,6 +224,9 @@ export function cloneForce(x) {
             }
         }
     }
+    uniqueList.forEach((item)=>{
+        delete item[uniqueKey];
+    });
 
     return root;
 }
