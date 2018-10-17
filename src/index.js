@@ -1,5 +1,5 @@
 import { type } from '@jsmini/type';
-import { guid }   from '@jsmini/guid';
+import { Guid }   from '@jsmini/guid';
 
 // Object.create(null) 的对象，没有hasOwnProperty方法
 function hasOwnProp(obj, key) {
@@ -130,9 +130,11 @@ export function cloneLoop(x) {
     return root;
 }
 
+const g = new Guid();
+
 // weakmap：处理对象关联引用
 function SimpleWeakmap (){
-    this.uniqueKey = 'com.yanhaijing.' + guid();
+    this.uniqueKey = 'com.yanhaijing.jsmini.clone' + g.guid();
     this.cacheArray = [];
 }
 
@@ -143,14 +145,13 @@ SimpleWeakmap.prototype.set = function(key, value){
         Object.defineProperty(key, this.uniqueKey, {
             enumerable: false,
             configurable:true,
-            value:value
+            value: value
         });
     }else{
         key[this.uniqueKey] = value;
     }
 };
 SimpleWeakmap.prototype.get = function(key){
-
     return key[this.uniqueKey];
 };
 SimpleWeakmap.prototype.clear = function(){
@@ -172,7 +173,6 @@ function getWeakMap(){
     result = new SimpleWeakmap();
 
     return result;
-    
 }
 
 export function cloneForce(x) {
