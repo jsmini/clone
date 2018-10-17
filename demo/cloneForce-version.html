@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cloneForce不同版本性能对比</title>
+</head>
+<body>
+    <script src="js/clone-0.1.1.aio.js"></script>
+    <script>
+        var cloneForce011 = jsmini_clone.cloneForce;
+    </script>
+    <script src="../dist/index.aio.js"></script>
+    <script src="js/comm.js"></script>
+    <script>
+
+        var data1 = createData(100, 0);
+        var data2 = createData(1000, 0);
+        var data3 = createData(10000, 0);
+
+        safeRun('100 object cloneForce011', function () { cloneForce011(data1) })
+        safeRun('100 object cloneForce', function () { cloneForce(data1) })
+
+        safeRun('1000 object cloneForce011', function () { cloneForce011(data2) })
+        safeRun('1000 object cloneForce', function () { cloneForce(data2) })
+
+        safeRun('10000 object cloneForce011', function () { cloneForce011(data3) })
+        safeRun('10000 object cloneForce', function () { cloneForce(data3) })
+    </script>
+</body>
+</html>
