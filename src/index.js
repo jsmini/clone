@@ -129,38 +129,57 @@ export function cloneLoop(x) {
     return root;
 }
 
-// 保持引用关系
-const UNIQUE_KEY = 'com.yanhaijing.' + (new Date).getTime();
-
-// 创建数据
-function createData() {
-    return [];
+// weakmap：处理对象关联引用
+function SimpleWeakmap (){
 }
-// 将数据加入暂存区
-function setData(data, source, target) {
-    const index = data.length;
-    data[index] = { source, target };
-    source[UNIQUE_KEY] = index;
-}
-// 查找缓存
-function findData(data, source) {
-    const index = source[UNIQUE_KEY];
+SimpleWeakmap.prototype = {
+    uniqueKey:'com.yanhaijing.' + (new Date).getTime(),
+    cacheArray:[],
+    cacheMap:{}
+};
 
-    if (typeof index === 'number') {
-        return data[index].target;
+SimpleWeakmap.prototype.set = function(key,value){
+
+    if(!isClone(key)){
+        this.cacheMap[key] = value;
+    }else{
+        var length = this.cacheArray.length;
+        Object.defineProperty(key, this.uniqueKey, {
+            value: length,
+            enumerable: false,
+            configurable:true
+        });
+        this.cacheArray[length] = {
+            key:key,
+            value:value
+        };
+    }
+};
+SimpleWeakmap.prototype.get = function(key){
+
+    if(!isClone(key)){
+        return this.cacheMap[key];
+    }else{
+        var length = key[this.uniqueKey];
+        
+        if (typeof length == 'number'){
+            return this.cacheArray[length].value;
+        }
     }
 
-    return false;
-}
-// 清除缓存
-function clearData(data) {
-    for (let i = 0; i < data.length; i++) {
-        delete data[i].source[UNIQUE_KEY];
+    return null;
+};
+SimpleWeakmap.prototype.clear = function(){
+    this.cacheMap = null;
+    for (let i = 0; i < this.cacheArray.length; i++) {
+        let key = this.cacheArray[i].key;
+        delete key[this.uniqueKey];
     }
-    data.length = 0;
-}
+    this.cacheArray.length = 0;
+};
+
 export function cloneForce(x) {
-    const uniqueData = createData();
+    const uniqueData = new (WeakMap || SimpleWeakmap)();
     const t = type(x);
 
     let root = x;
@@ -197,14 +216,14 @@ export function cloneForce(x) {
         // 复杂数据需要缓存操作
         if (isClone(source)) {
             // 命中缓存，直接返回缓存数据
-            let uniqueTarget = findData(uniqueData, source);
+            let uniqueTarget = uniqueData.get(source);
             if (uniqueTarget) {
                 parent[key] = uniqueTarget;
                 continue; // 中断本次循环
             }
 
             // 未命中缓存，保存到缓存
-            setData(uniqueData, source, target);
+            uniqueData.set(source,target);
         }
 
         if (tt === 'array') {
@@ -223,7 +242,6 @@ export function cloneForce(x) {
         } else if (tt === 'object'){
             for(let k in source) {
                 if (hasOwnProp(source, k)) {
-                    if (k == UNIQUE_KEY) continue;
                     if (isClone(source[k])) {
                         // 下一次循环
                         loopList.push({
@@ -239,7 +257,7 @@ export function cloneForce(x) {
         }
     }
     
-    clearData(uniqueData);
-
+    uniqueData.clear && uniqueData.clear();
+    
     return root;
 }
