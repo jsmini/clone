@@ -136,8 +136,7 @@ function SimpleWeakmap (){
     this.cacheArray = [];
 }
 
-SimpleWeakmap.prototype.set = function(key,value){
-
+SimpleWeakmap.prototype.set = function(key, value){
     this.cacheArray.push(key);
 
     if(Object.defineProperty){
@@ -222,7 +221,7 @@ export function cloneForce(x) {
             }
 
             // 未命中缓存，保存到缓存
-            uniqueData.set(source,target);
+            uniqueData.set(source, target);
         }
 
         if (tt === 'array') {
