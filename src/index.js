@@ -176,7 +176,7 @@ function getWeakMap(){
     
 }
 
-export function cloneForce(x,isClear) {
+export function cloneForce(x) {
     const uniqueData = getWeakMap();
 
     const t = type(x);
@@ -257,7 +257,8 @@ export function cloneForce(x,isClear) {
         }
     }
     
-    isClear && uniqueData.clear && uniqueData.clear();
+
+    uniqueData.clear && uniqueData.clear();
     
     return root;
 }
