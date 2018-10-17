@@ -65,6 +65,9 @@ describe('单元测试', function() {
         },
         {
             a: b,
+        },
+        {
+            a: b,
         }
     ];
 
@@ -77,6 +80,9 @@ describe('单元测试', function() {
     var complexRefList = [
         {
             a: a,
+        },
+        {
+            a: b,
         },
         {
             a: b,
