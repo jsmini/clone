@@ -9,6 +9,11 @@
     <script>
         var cloneForce011 = jsmini_clone.cloneForce;
     </script>
+    <script src="js/clone-0.2.0.aio.js"></script>
+    <script>
+        var cloneForce020 = jsmini_clone.cloneForce;
+    </script>
+
     <script src="../dist/index.aio.js"></script>
     <script src="js/comm.js"></script>
     <script>
@@ -17,14 +22,38 @@
         var data2 = createData(1000, 0);
         var data3 = createData(10000, 0);
 
-        safeRun('100 object cloneForce011', function () { cloneForce011(data1) })
-        safeRun('100 object cloneForce', function () { cloneForce(data1) })
 
-        safeRun('1000 object cloneForce011', function () { cloneForce011(data2) })
-        safeRun('1000 object cloneForce', function () { cloneForce(data2) })
+        function run(list) {
+            if (list.length === 0) return;
 
-        safeRun('10000 object cloneForce011', function () { cloneForce011(data3) })
-        safeRun('10000 object cloneForce', function () { cloneForce(data3) })
+            console.log('2000ms内运行的次数：', list[0]());
+
+            setTimeout(function () {run(list.slice(1))}, 1000);
+        }
+
+        var list1 = [
+            function () {return runTime(function() {cloneForce011(data1)}, 2000)},
+            function () {return runTime(function() {cloneForce020(data1)}, 2000)},
+            function () {return runTime(function() {cloneForce(data1)}, 2000)},
+        ];
+
+        run(list1)
+
+        var list2 = [
+            function () {return runTime(function() {cloneForce011(data2)}, 2000)},
+            function () {return runTime(function() {cloneForce020(data2)}, 2000)},
+            function () {return runTime(function() {cloneForce(data2)}, 2000)},
+        ];
+
+        setTimeout(function () { run(list2) }, 10000)
+
+        var list3 = [
+            function () {return runTime(function() {cloneForce011(data3)}, 2000)},
+            function () {return runTime(function() {cloneForce020(data3)}, 2000)},
+            function () {return runTime(function() {cloneForce(data3)}, 2000)},
+        ];
+
+        setTimeout(function () { run(list3) }, 20000)
     </script>
 </body>
 </html>

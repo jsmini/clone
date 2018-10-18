@@ -1,4 +1,5 @@
 import { type } from '@jsmini/type';
+import { Guid }   from '@jsmini/guid';
 
 // Object.create(null) 的对象，没有hasOwnProperty方法
 function hasOwnProp(obj, key) {
@@ -129,38 +130,54 @@ export function cloneLoop(x) {
     return root;
 }
 
-// 保持引用关系
-const UNIQUE_KEY = 'com.yanhaijing.' + (new Date).getTime();
+const g = new Guid();
 
-// 创建数据
-function createData() {
-    return [];
+// weakmap：处理对象关联引用
+function SimpleWeakmap (){
+    this.uniqueKey = 'com.yanhaijing.jsmini.clone' + g.guid();
+    this.cacheArray = [];
 }
-// 将数据加入暂存区
-function setData(data, source, target) {
-    const index = data.length;
-    data[index] = { source, target };
-    source[UNIQUE_KEY] = index;
-}
-// 查找缓存
-function findData(data, source) {
-    const index = source[UNIQUE_KEY];
 
-    if (typeof index === 'number') {
-        return data[index].target;
+SimpleWeakmap.prototype.set = function(key, value){
+    this.cacheArray.push(key);
+
+    if(Object.defineProperty){
+        Object.defineProperty(key, this.uniqueKey, {
+            enumerable: false,
+            configurable:true,
+            value: value
+        });
+    }else{
+        key[this.uniqueKey] = value;
     }
-
-    return false;
-}
-// 清除缓存
-function clearData(data) {
-    for (let i = 0; i < data.length; i++) {
-        delete data[i].source[UNIQUE_KEY];
+};
+SimpleWeakmap.prototype.get = function(key){
+    return key[this.uniqueKey];
+};
+SimpleWeakmap.prototype.clear = function(){
+    for (let i = 0; i < this.cacheArray.length; i++) {
+        let key = this.cacheArray[i];
+        delete key[this.uniqueKey];
     }
-    data.length = 0;
+    this.cacheArray.length = 0;
+};
+
+function getWeakMap(){
+    let result;
+    if(typeof WeakMap !== 'undefined' && type(WeakMap)== 'function'){
+        result = new WeakMap();
+        if(type(result) == 'weakmap'){
+            return result;
+        }
+    }
+    result = new SimpleWeakmap();
+
+    return result;
 }
+
 export function cloneForce(x) {
-    const uniqueData = createData();
+    const uniqueData = getWeakMap();
+
     const t = type(x);
 
     let root = x;
@@ -197,14 +214,14 @@ export function cloneForce(x) {
         // 复杂数据需要缓存操作
         if (isClone(source)) {
             // 命中缓存，直接返回缓存数据
-            let uniqueTarget = findData(uniqueData, source);
+            let uniqueTarget = uniqueData.get(source);
             if (uniqueTarget) {
                 parent[key] = uniqueTarget;
                 continue; // 中断本次循环
             }
 
             // 未命中缓存，保存到缓存
-            setData(uniqueData, source, target);
+            uniqueData.set(source, target);
         }
 
         if (tt === 'array') {
@@ -223,7 +240,7 @@ export function cloneForce(x) {
         } else if (tt === 'object'){
             for(let k in source) {
                 if (hasOwnProp(source, k)) {
-                    if (k == UNIQUE_KEY) continue;
+                    if(k == uniqueData.uniqueKey) continue;
                     if (isClone(source[k])) {
                         // 下一次循环
                         loopList.push({
@@ -239,7 +256,8 @@ export function cloneForce(x) {
         }
     }
     
-    clearData(uniqueData);
 
+    uniqueData.clear && uniqueData.clear();
+    
     return root;
 }
