@@ -1,5 +1,4 @@
 import { type } from '@jsmini/type';
-import { Guid }   from '@jsmini/guid';
 
 // Object.create(null) 的对象，没有hasOwnProperty方法
 function hasOwnProp(obj, key) {
@@ -130,34 +129,24 @@ export function cloneLoop(x) {
     return root;
 }
 
-const g = new Guid();
+const UNIQUE_KEY = 'com.yanhaijing.jsmini.clone' + (new Date).getTime();
 
 // weakmap：处理对象关联引用
 function SimpleWeakmap (){
-    this.uniqueKey = 'com.yanhaijing.jsmini.clone' + g.guid();
     this.cacheArray = [];
 }
 
 SimpleWeakmap.prototype.set = function(key, value){
     this.cacheArray.push(key);
-
-    if(Object.defineProperty){
-        Object.defineProperty(key, this.uniqueKey, {
-            enumerable: false,
-            configurable:true,
-            value: value
-        });
-    }else{
-        key[this.uniqueKey] = value;
-    }
+    key[UNIQUE_KEY] = value;
 };
 SimpleWeakmap.prototype.get = function(key){
-    return key[this.uniqueKey];
+    return key[UNIQUE_KEY];
 };
 SimpleWeakmap.prototype.clear = function(){
     for (let i = 0; i < this.cacheArray.length; i++) {
         let key = this.cacheArray[i];
-        delete key[this.uniqueKey];
+        delete key[UNIQUE_KEY];
     }
     this.cacheArray.length = 0;
 };
@@ -240,7 +229,7 @@ export function cloneForce(x) {
         } else if (tt === 'object'){
             for(let k in source) {
                 if (hasOwnProp(source, k)) {
-                    if(k == uniqueData.uniqueKey) continue;
+                    if(k === UNIQUE_KEY) continue;
                     if (isClone(source[k])) {
                         // 下一次循环
                         loopList.push({
