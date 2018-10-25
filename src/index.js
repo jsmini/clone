@@ -132,6 +132,10 @@ export function cloneLoop(x) {
 
 const UNIQUE_KEY = 'com.yanhaijing.jsmini.clone' + (new Date).getTime();
 const UNIQUE_SET_KEY = 'com.yanhaijing.jsmini.clone.set' + (new Date).getTime();
+const UNIQUE_MAPKEY_KEY = 'com.yanhaijing.jsmini.clone.mapkey' + (new Date).getTime();
+const UNIQUE_MAPVALUE_KEY = 'com.yanhaijing.jsmini.clone.mapvalue' + (new Date).getTime();
+
+
 
 // weakmap：处理对象关联引用
 function SimpleWeakmap (){
@@ -167,7 +171,17 @@ function getWeakMap(){
 }
 
 function setValueToParent(parent,key,value){
-    key == UNIQUE_SET_KEY ? parent.add(value) : parent[key] = value;
+    
+    if(key === UNIQUE_SET_KEY){
+        parent.add(value);
+    }else if(key == UNIQUE_MAPVALUE_KEY){ //控制数据循环的顺序，先添加value，再添加key
+        parent.set(UNIQUE_MAPKEY_KEY,value);
+    }else if(key == UNIQUE_MAPKEY_KEY){
+        parent.set(value,parent.get(UNIQUE_MAPKEY_KEY));
+        parent.delete(UNIQUE_MAPKEY_KEY);
+    }else{
+        parent[key] = value;
+    }
     return value;
 }
 
@@ -218,6 +232,7 @@ const checkMap = runOnce(function(){
             map.delete(UNIQUE_KEY);
             return true;
         }
+        map.delete(UNIQUE_KEY);
     } catch (e) {
         console.log(e.message);
     }
@@ -292,8 +307,22 @@ export function cloneForce(x) {
                     data: s,
                 });
             }
-        } else if (tt === 'Map' && checkMap()){
+        } else if (tt === 'map' && checkMap()){
             newValue = setValueToParent(parent,key,new Map());
+            for (let m of source){
+                // 下一次循环
+                //先添加key， 再添加value 和 setValueToParent里保持一致
+                loopList.push({
+                    parent: newValue,
+                    key: UNIQUE_MAPKEY_KEY,
+                    data: m[0],
+                });
+                loopList.push({
+                    parent: newValue,
+                    key: UNIQUE_MAPVALUE_KEY,
+                    data: m[1],
+                });
+            }
         } else{
             setValueToParent(parent,key,source);
             continue;

@@ -100,6 +100,19 @@ describe('单元测试', function() {
         normalList1.push({
             a:set,
         })
+
+        let map = new Map()
+        let obj = {}
+        map.set(1,1)
+        map.set(2,'a')
+        map.set('a',null)
+        map.set('b',1)
+        map.set(4,undefined)
+        map.set({},1)
+        map.set(obj,obj)
+        normalList1.push({
+            a:map,
+        })
     } catch (error) {
         
     }
@@ -136,24 +149,39 @@ describe('单元测试', function() {
             }
         ];
         let set = new Set()
+
+        set.add(set)
+
         let set1 = new Set()
-        set.add(1)
-        set.add(set1)
-        set1.add({
-            a: 1,
-            a1:[set1],
-            a2:{
-                a:[set1]
-            }
-        })
-        set.add([
-            'abc'
-        ])
-        set.add(null)
-        set.add(set1)
+
         set1.add(set)
-        singleRefList.push({
+
+        singleRefList1.push({
             a:set,
+        })
+        singleRefList1.push({
+            a:set1,
+        })
+
+        var map = new Map()
+        map.set('a',map)
+
+        map.set(map,'a')        
+
+        var map1 = new Map()
+
+        map1.set('a',{
+            'a4':map1
+        })
+        map1.set({
+            'a4':map1
+        },'a')
+
+        singleRefList1.push({
+            a:map,
+        })
+        singleRefList1.push({
+            a:map1,
         })
     } catch (error) {
         
@@ -204,6 +232,19 @@ describe('单元测试', function() {
         set2.add(set1)
         complexRefList1.push({
             a:set1
+        })
+
+
+        let map = new Map()
+        let map1 = new Map()
+        let map2 = new Map()
+        map1.set('b',map2)
+        map1.set('a',map)
+        map1.set(map,'a')
+        map.set('a',map1)
+        map.set(map1,'b')
+        complexRefList1.push({
+            a:map
         })
     } catch (error) {
         
@@ -285,9 +326,8 @@ describe('单元测试', function() {
                 expect(cloneForce(simpleList[i].a)).to.be(simpleList[i].a);
             }
 
-            for (var i = 0; i < normalList.length; i++) {
+            for (var i = 0; i < normalList1.length; i++) {
                 var temp = cloneForce(normalList1[i].a);
-                
                 // 确保不全等
                 expect(temp).not.to.be(normalList1[i].a);
                 // 确保内容一样
@@ -301,17 +341,35 @@ describe('单元测试', function() {
 
             var temp = cloneForce(singleRefList1[1].a);
             expect(temp).to.be(temp['a4']);
+
+            //set数据检测
+            var temp = cloneForce(singleRefList1[3].a);
+            expect(temp.has(temp)).to.be(true);
+            var temp1 = cloneForce(singleRefList1[4].a);
+            expect(temp1.has(temp1)).not.to.be(true);
+
+            //map数据检测
+            var temp = cloneForce(singleRefList1[5].a);
+            expect(temp.has(temp)).to.be(true);
+            expect(temp.has(temp.get('a'))).to.be(true);
+
+            var temp = cloneForce(singleRefList1[6].a);
+            // expect(temp.has(temp)).to.be(true);
+            expect(temp.get('a')['a4']).to.be(temp);
+            
         });
 
         it('复杂循环引用', function() {
             var temp = cloneForce(complexRefList1[0].a);
             expect(temp).to.be(temp[1][1]);
 
-            var temp = cloneForce(complexRefList1[3].a);
-            expect(temp.has(temp)).to.be(true);
 
             var temp = cloneForce(complexRefList1[1].a);
             expect(temp).to.be(temp.a2.b2);
+
+            //set数据的检测
+            var temp = cloneForce(complexRefList1[3].a);
+            expect(temp.has(temp)).to.be(true);
             var temp = cloneForce(complexRefList1[4].a);
             var values = temp.values()
             var temp1 = values.next().value
@@ -327,6 +385,17 @@ describe('单元测试', function() {
                 expect(temp).to.be(value2.b);
                 expect(temp).to.be(value1);
             }
+
+            //map数据检测 map1.set(map,{})
+
+            
+            var temp = cloneForce(complexRefList1[5].a);
+            
+            expect(temp.get('a').get('a')).to.be(temp);
+            expect(temp.get('a').get('b')).not.to.be(temp);
+            expect(temp.get(temp.get('a'))).to.be('b')
+            expect(temp.get('a').get(temp.get('a').get('a'))).to.be('a')
+
         });
     });
 });
