@@ -185,28 +185,9 @@ function setValueToParent(parent,key,value){
     return value;
 }
 
-/**
- * 
- * @param {function} fn  被执行的函数
- * 
- * 返回一个函数a，该函数a会缓存fn的执行结果
- */
-function runOnce(fn){
-    let result;
-    let time = 0;
-    return function(){
-        if(time > 0){
-            return result;
-        }
-        time++;
-        result = fn();
-
-        return result;
-    };
-}
 
 //检测Set功能
-const checkSet = runOnce(function(){
+const checkSet = (function(){
     try {
         let set = new Set();
         set.add(UNIQUE_KEY);
@@ -220,9 +201,9 @@ const checkSet = runOnce(function(){
         console.log(e.message);
     }
     return false;
-});
+})();
 //检测Map的功能
-const checkMap = runOnce(function(){
+const checkMap = (function(){
     try {
         let map = new Map();
         map.set(UNIQUE_KEY,'Map');
@@ -237,7 +218,7 @@ const checkMap = runOnce(function(){
         console.log(e.message);
     }
     return false;
-});
+})();
 
 export function cloneForce(x) {
     const uniqueData = getWeakMap();
@@ -297,7 +278,7 @@ export function cloneForce(x) {
                     });
                 }
             }
-        } else if (tt === 'set' && checkSet()){
+        } else if (tt === 'set' && checkSet){
             newValue = setValueToParent(parent,key,new Set());
             for (let s of source){
                 // 下一次循环
@@ -307,7 +288,7 @@ export function cloneForce(x) {
                     data: s,
                 });
             }
-        } else if (tt === 'map' && checkMap()){
+        } else if (tt === 'map' && checkMap){
             newValue = setValueToParent(parent,key,new Map());
             for (let m of source){
                 // 下一次循环
