@@ -81,8 +81,8 @@ describe('单元测试', function() {
                 a: {a1: 1, a2: [1, {b1: 1, b2: [{c1: 1, c2: 2}]}]}
             }
         ];
-        let set = new Set()
-        let set1 = new Set()
+        var set = new Set()
+        var set1 = new Set()
         set.add(1)
         set.add(set1)
         set.add({
@@ -101,8 +101,8 @@ describe('单元测试', function() {
             a:set,
         })
 
-        let map = new Map()
-        let obj = {}
+        var map = new Map()
+        var obj = {}
         map.set(1,1)
         map.set(2,'a')
         map.set('a',null)
@@ -148,11 +148,11 @@ describe('单元测试', function() {
                 a: b,
             }
         ];
-        let set = new Set()
+        var set = new Set()
 
         set.add(set)
 
-        let set1 = new Set()
+        var set1 = new Set()
 
         set1.add(set)
 
@@ -217,9 +217,9 @@ describe('单元测试', function() {
                 a: b,
             }
         ];
-        let set = new Set()
-        let set1 = new Set()
-        let set2 = new Set()
+        var set = new Set()
+        var set1 = new Set()
+        var set2 = new Set()
         set.add(set)
         
         complexRefList1.push({
@@ -235,9 +235,9 @@ describe('单元测试', function() {
         })
 
 
-        let map = new Map()
-        let map1 = new Map()
-        let map2 = new Map()
+        var map = new Map()
+        var map1 = new Map()
+        var map2 = new Map()
         map1.set('b',map2)
         map1.set('a',map)
         map1.set(map,'a')
@@ -343,19 +343,25 @@ describe('单元测试', function() {
             expect(temp).to.be(temp['a4']);
 
             //set数据检测
-            var temp = cloneForce(singleRefList1[3].a);
-            expect(temp.has(temp)).to.be(true);
-            var temp1 = cloneForce(singleRefList1[4].a);
-            expect(temp1.has(temp1)).not.to.be(true);
+            if(singleRefList1[3]){
+                var temp = cloneForce(singleRefList1[3].a);
+                expect(temp.has(temp)).to.be(true);
+                var temp1 = cloneForce(singleRefList1[4].a);
+                expect(temp1.has(temp1)).not.to.be(true);
+            }
 
             //map数据检测
-            var temp = cloneForce(singleRefList1[5].a);
-            expect(temp.has(temp)).to.be(true);
-            expect(temp.has(temp.get('a'))).to.be(true);
 
-            var temp = cloneForce(singleRefList1[6].a);
-            // expect(temp.has(temp)).to.be(true);
-            expect(temp.get('a')['a4']).to.be(temp);
+            if(singleRefList1[5]){
+                var temp = cloneForce(singleRefList1[5].a);
+                expect(temp.has(temp)).to.be(true);
+                expect(temp.has(temp.get('a'))).to.be(true);
+
+                var temp = cloneForce(singleRefList1[6].a);
+                // expect(temp.has(temp)).to.be(true);
+                expect(temp.get('a')['a4']).to.be(temp);
+            }
+            
             
         });
 
@@ -368,33 +374,37 @@ describe('单元测试', function() {
             expect(temp).to.be(temp.a2.b2);
 
             //set数据的检测
-            var temp = cloneForce(complexRefList1[3].a);
-            expect(temp.has(temp)).to.be(true);
-            var temp = cloneForce(complexRefList1[4].a);
-            var values = temp.values()
-            var temp1 = values.next().value
-            values = temp1.values()
-            var value1 = values.next().value
-            var value2 = values.next().value
-            
-            if (type(value1) == 'object'){
-                expect(temp).to.be(value1.b);
-                expect(temp).to.be(value2);
+            if (complexRefList1[3]){
+                var temp = cloneForce(complexRefList1[3].a);
+                expect(temp.has(temp)).to.be(true);
+                var temp = cloneForce(complexRefList1[4].a);
+                var values = temp.values()
+                var temp1 = values.next().value
+                values = temp1.values()
+                var value1 = values.next().value
+                var value2 = values.next().value
                 
-            }else{
-                expect(temp).to.be(value2.b);
-                expect(temp).to.be(value1);
+                if (type(value1) == 'object'){
+                    expect(temp).to.be(value1.b);
+                    expect(temp).to.be(value2);
+                    
+                }else{
+                    expect(temp).to.be(value2.b);
+                    expect(temp).to.be(value1);
+                }
             }
 
-            //map数据检测 map1.set(map,{})
+            //map数据检测 
 
+            if(complexRefList1[5]){
+                
+                var temp = cloneForce(complexRefList1[5].a);
             
-            var temp = cloneForce(complexRefList1[5].a);
-            
-            expect(temp.get('a').get('a')).to.be(temp);
-            expect(temp.get('a').get('b')).not.to.be(temp);
-            expect(temp.get(temp.get('a'))).to.be('b')
-            expect(temp.get('a').get(temp.get('a').get('a'))).to.be('a')
+                expect(temp.get('a').get('a')).to.be(temp);
+                expect(temp.get('a').get('b')).not.to.be(temp);
+                expect(temp.get(temp.get('a'))).to.be('b')
+                expect(temp.get('a').get(temp.get('a').get('a'))).to.be('a')
+            }
 
         });
     });
