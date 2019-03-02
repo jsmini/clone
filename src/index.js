@@ -48,7 +48,10 @@ export function cloneJSON(x, errOrDef = true) {
         if (errOrDef === true) {
             throw e;
         } else {
-            console.error('cloneJSON error: ' + e.message);
+            try {
+                // ie8无console
+                console.error('cloneJSON error: ' + e.message);
+            } catch(e) {}
             return errOrDef;
         }
     }
