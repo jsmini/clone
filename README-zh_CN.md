@@ -73,7 +73,7 @@ requirejs(['node_modules/@jsmini/clone/dist/index.aio.js'], function (jsmini_clo
 - [API](https://github.com/jsmini/clone/blob/master/doc/api.md)
 - [深拷贝的终极探索](https://yanhaijing.com/javascript/2018/10/10/clone-deep/)
 
-## 贡献指南
+## 贡献指南  ![PRs welcome](<https://img.shields.io/badge/PRs-welcome-brightgreen.svg>)
 首次运行需要先安装依赖
 
 ```bash
