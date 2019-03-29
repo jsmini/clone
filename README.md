@@ -7,7 +7,7 @@
 [![NPM downloads](http://img.shields.io/npm/dm/@jsmini/clone.svg?style=flat-square)](http://www.npmtrends.com/@jsmini/clone)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/jsmini/clone.svg)](http://isitmaintained.com/project/jsmini/clone "Percentage of issues still open")
 
-A professional deep clone library 最专业的深拷贝库 
+A professional deep clone library 最专业的深拷贝库
 
 English | [简体中文](./README-zh_CN.md)
 
