@@ -1,9 +1,9 @@
 var expect = require('expect.js');
 
-var clone = require('../dist/index.js').clone;
-var cloneJSON = require('../dist/index.js').cloneJSON;
-var cloneLoop = require('../dist/index.js').cloneLoop;
-var cloneForce = require('../dist/index.js').cloneForce;
+var clone = require('../src/index.js').clone;
+var cloneJSON = require('../src/index.js').cloneJSON;
+var cloneLoop = require('../src/index.js').cloneLoop;
+var cloneForce = require('../src/index.js').cloneForce;
 
 function stringify(x) {
     return JSON.stringify(x);

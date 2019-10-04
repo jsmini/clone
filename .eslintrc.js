@@ -4,7 +4,9 @@ module.exports = {
         "es6": true,
         "node": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+    ],
     "parserOptions": {
         "sourceType": "module"
     },
@@ -25,7 +27,6 @@ module.exports = {
             "error",
             "always"
         ],
-        "no-console": 0,
-        "no-empty": 0,
+        "no-console": "off",
     }
 };

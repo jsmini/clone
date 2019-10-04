@@ -51,6 +51,7 @@ export function cloneJSON(x, errOrDef = true) {
             try {
                 // ie8无console
                 console.error('cloneJSON error: ' + e.message);
+            // eslint-disable-next-line no-empty
             } catch(e) {}
             return errOrDef;
         }
