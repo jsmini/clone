@@ -1,5 +1,6 @@
 import { type } from '@jsmini/type';
 
+
 // Object.create(null) 的对象，没有hasOwnProperty方法
 function hasOwnProp(obj, key) {
     return Object.prototype.hasOwnProperty.call(obj, key);
@@ -8,7 +9,7 @@ function hasOwnProp(obj, key) {
 // 仅对对象和数组进行深拷贝，其他类型，直接返回
 function isClone(x) {
     const t = type(x);
-    return t === 'object' || t === 'array';
+    return t === 'object' || t === 'array' || t === 'set' || t === 'map';
 }
 
 // 递归
@@ -134,6 +135,11 @@ export function cloneLoop(x) {
 }
 
 const UNIQUE_KEY = 'com.yanhaijing.jsmini.clone' + (new Date).getTime();
+const UNIQUE_SET_KEY = 'com.yanhaijing.jsmini.clone.set' + (new Date).getTime();
+const UNIQUE_MAPKEY_KEY = 'com.yanhaijing.jsmini.clone.mapkey' + (new Date).getTime();
+const UNIQUE_MAPVALUE_KEY = 'com.yanhaijing.jsmini.clone.mapvalue' + (new Date).getTime();
+
+
 
 // weakmap：处理对象关联引用
 function SimpleWeakmap (){
@@ -168,24 +174,68 @@ function getWeakMap(){
     return result;
 }
 
+function setValueToParent(parent,key,value){
+    
+    if(key === UNIQUE_SET_KEY){
+        parent.add(value);
+    }else if(key == UNIQUE_MAPVALUE_KEY){ //控制数据循环的顺序，先添加value，再添加key
+        parent.set(UNIQUE_MAPKEY_KEY,value);
+    }else if(key == UNIQUE_MAPKEY_KEY){
+        parent.set(value,parent.get(UNIQUE_MAPKEY_KEY));
+        parent.delete(UNIQUE_MAPKEY_KEY);
+    }else{
+        parent[key] = value;
+    }
+    return value;
+}
+
+
+//检测Set功能
+const checkSet = (function(){
+    try {
+        let set = new Set();
+        set.add(UNIQUE_KEY);
+
+        if(set.has(UNIQUE_KEY)){
+
+            set.delete(UNIQUE_KEY);
+            return true;
+        }
+    } catch (e) {
+        console.log(e.message);
+    }
+    return false;
+})();
+//检测Map的功能
+const checkMap = (function(){
+    try {
+        let map = new Map();
+        map.set(UNIQUE_KEY,'Map');
+
+        if(map.has(UNIQUE_KEY) && map.get(UNIQUE_KEY) == 'Map'){
+
+            map.delete(UNIQUE_KEY);
+            return true;
+        }
+        map.delete(UNIQUE_KEY);
+    } catch (e) {
+        console.log(e.message);
+    }
+    return false;
+})();
+
 export function cloneForce(x) {
     const uniqueData = getWeakMap();
 
-    const t = type(x);
-
-    let root = x;
-
-    if (t === 'array') {
-        root = [];
-    } else if (t === 'object') {
-        root = {};
-    }
+    let root = {
+        next:x
+    };
 
     // 循环数组
     const loopList = [
         {
             parent: root,
-            key: undefined,
+            key: 'next',
             data: x,
         }
     ];
@@ -198,59 +248,80 @@ export function cloneForce(x) {
         const source = node.data;
         const tt = type(source);
 
-        // 初始化赋值目标，key为undefined则拷贝到父元素，否则拷贝到子元素
-        let target = parent;
-        if (typeof key !== 'undefined') {
-            target = parent[key] = tt === 'array' ? [] : {};
-        }
-
         // 复杂数据需要缓存操作
         if (isClone(source)) {
             // 命中缓存，直接返回缓存数据
             let uniqueTarget = uniqueData.get(source);
             if (uniqueTarget) {
-                parent[key] = uniqueTarget;
+                setValueToParent(parent,key,uniqueTarget);
                 continue; // 中断本次循环
             }
-
-            // 未命中缓存，保存到缓存
-            uniqueData.set(source, target);
         }
 
+        let newValue;
         if (tt === 'array') {
+            newValue = setValueToParent(parent,key,[]);
             for (let i = 0; i < source.length; i++) {
-                if (isClone(source[i])) {
-                    // 下一次循环
-                    loopList.push({
-                        parent: target,
-                        key: i,
-                        data: source[i],
-                    });
-                } else {
-                    target[i] = source[i];
-                }
+                // 下一次循环
+                loopList.push({
+                    parent: newValue,
+                    key: i,
+                    data: source[i],
+                });
             }
         } else if (tt === 'object'){
+            newValue = setValueToParent(parent,key,{});
             for(let k in source) {
+                if(k === UNIQUE_KEY) continue;
                 if (hasOwnProp(source, k)) {
-                    if(k === UNIQUE_KEY) continue;
-                    if (isClone(source[k])) {
-                        // 下一次循环
-                        loopList.push({
-                            parent: target,
-                            key: k,
-                            data: source[k],
-                        });
-                    } else {
-                        target[k] = source[k];
-                    }
+                    // 下一次循环
+                    loopList.push({
+                        parent: newValue,
+                        key: k,
+                        data: source[k],
+                    });
                 }
             }
+        } else if (tt === 'set' && checkSet){
+            newValue = setValueToParent(parent,key,new Set());
+            for (let s of source){
+                // 下一次循环
+                loopList.push({
+                    parent: newValue,
+                    key: UNIQUE_SET_KEY,
+                    data: s,
+                });
+            }
+        } else if (tt === 'map' && checkMap){
+            newValue = setValueToParent(parent,key,new Map());
+            for (let m of source){
+                // 下一次循环
+                //先添加key， 再添加value 和 setValueToParent里保持一致
+                loopList.push({
+                    parent: newValue,
+                    key: UNIQUE_MAPKEY_KEY,
+                    data: m[0],
+                });
+                loopList.push({
+                    parent: newValue,
+                    key: UNIQUE_MAPVALUE_KEY,
+                    data: m[1],
+                });
+            }
+        } else{
+            setValueToParent(parent,key,source);
+            continue;
         }
+
+        // 未命中缓存，保存到缓存
+        uniqueData.set(source, newValue);
+
     }
     
 
     uniqueData.clear && uniqueData.clear();
     
-    return root;
+    return root.next;
 }
+
+
