@@ -1,33 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     <script src="../node_modules/es5-shim/es5-shim.js"></script>
     <script src="../node_modules/es5-shim/es5-sham.js"></script>
-    
+
     <script src="../dist/index.aio.js"></script>
     <script>
-        // console.log(jsmini_clone.clone({a: 1}));
-        // console.log(jsmini_clone.clone([1]));
+      // console.log(jsmini_clone.clone({a: 1}));
+      // console.log(jsmini_clone.clone([1]));
 
-        // console.log(jsmini_clone.cloneJSON({a: 1}));
+      // console.log(jsmini_clone.cloneJSON({a: 1}));
 
-        // console.log(jsmini_clone.cloneLoop({a1: 1, a2: {b1: 1, b2: {c1: 1, c2: 3}}}));
-        
-        // console.log(jsmini_clone.cloneForce({a1: 1, a2: {b1: 1, b2: {c1: 1, c2: 3}}}));
+      // console.log(jsmini_clone.cloneLoop({a1: 1, a2: {b1: 1, b2: {c1: 1, c2: 3}}}));
 
+      // console.log(jsmini_clone.cloneForce({a1: 1, a2: {b1: 1, b2: {c1: 1, c2: 3}}}));
 
-        // var a = {};
-        // var b = {b: 1};
-        // a.a1 = b;
-        // a.a2 = b;
-        // a.a3 = b;
+      // var a = {};
+      // var b = {b: 1};
+      // a.a1 = b;
+      // a.a2 = b;
+      // a.a3 = b;
 
-        var a = {};
-        console.log(jsmini_clone.cloneForce(a))
+      var a = {};
+      console.log(jsmini_clone.cloneForce(a));
     </script>
-</body>
+  </body>
 </html>

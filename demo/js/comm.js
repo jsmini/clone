@@ -4,52 +4,52 @@ var cloneLoop = jsmini_clone.cloneLoop;
 var cloneForce = jsmini_clone.cloneForce;
 
 function createData(deep, breadth) {
-    var data = {};
-    var temp = data;
+  var data = {};
+  var temp = data;
 
-    for (var i = 0; i < deep; i++) {
-        temp = temp['data'] = {};
-        for (var j = 0; j < breadth; j++) {
-            temp[j] = j;
-        }
+  for (var i = 0; i < deep; i++) {
+    temp = temp['data'] = {};
+    for (var j = 0; j < breadth; j++) {
+      temp[j] = j;
     }
+  }
 
-    return data;
+  return data;
 }
 
 function runCount(fn, count) {
-    var time = Date.now();
-    while(count--) {
-        fn()
-    }
+  var time = Date.now();
+  while (count--) {
+    fn();
+  }
 
-    return Date.now() - time;
+  return Date.now() - time;
 }
 
 function runTime(fn, time) {
-    var stime = Date.now();
-    var count = 0;
-    while(Date.now() - stime < time) {
-        fn();
-        count++;
-    }
+  var stime = Date.now();
+  var count = 0;
+  while (Date.now() - stime < time) {
+    fn();
+    count++;
+  }
 
-    return count;
+  return count;
 }
 
 function safeRun(name, fn) {
-    console.log(name, ' start');
-    
-    var time = Date.now();
+  console.log(name, ' start');
 
-    try {
-        fn()
-    } catch(e) {
-        console.log(e.message)
-    }
+  var time = Date.now();
 
-    time = Date.now() - time;
+  try {
+    fn();
+  } catch (e) {
+    console.log(e.message);
+  }
 
-    console.log(name, ' end，耗时: ', time);
-    return time;
+  time = Date.now() - time;
+
+  console.log(name, ' end，耗时: ', time);
+  return time;
 }

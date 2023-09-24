@@ -1,22 +1,23 @@
 # [clone](https://github.com/jsmini/clone)
+
 [![](https://img.shields.io/badge/Powered%20by-jslib%20base-brightgreen.svg)](https://github.com/yanhaijing/jslib-base)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/jsmini/clone/blob/master/LICENSE)
-[![Build Status](https://travis-ci.org/jsmini/clone.svg?branch=master)](https://travis-ci.org/jsmini/clone)
-[![Coveralls](https://img.shields.io/coveralls/jsmini/clone.svg)](https://coveralls.io/github/jsmini/clone)
+[![CI](https://github.com/jsmini/clone/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/jsmini/clone/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/badge/npm-0.4.2-orange.svg)](https://www.npmjs.com/package/@jsmini/clone)
 [![NPM downloads](http://img.shields.io/npm/dm/@jsmini/clone.svg?style=flat-square)](http://www.npmtrends.com/@jsmini/clone)
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/jsmini/clone.svg)](http://isitmaintained.com/project/jsmini/clone "Percentage of issues still open")
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/jsmini/clone.svg)](http://isitmaintained.com/project/jsmini/clone 'Percentage of issues still open')
 
 最专业的深拷贝库
 
 [Engilsh](./README.md) | 简体中文
 
 ## 兼容性
+
 单元测试保证支持如下环境：
 
-| IE   | CH   | FF   | SF   | OP   | IOS  | 安卓   | Node  |
-| ---- | ---- | ---- | ---- | ---- | ---- | ---- | ----- |
-| 6+   | 23+  | 4+   | 6+   | 10+  | 5+   | 2.3+ | 0.10+ |
+| IE  | CH  | FF  | SF  | OP  | IOS | 安卓 | Node  |
+| --- | --- | --- | --- | --- | --- | ---- | ----- |
+| 6+  | 23+ | 4+  | 6+  | 10+ | 5+  | 2.3+ | 0.10+ |
 
 ## 目录介绍
 
@@ -32,6 +33,7 @@
 ```
 
 ## 如何使用
+
 通过npm下载安装代码
 
 ```bash
@@ -53,9 +55,12 @@ import { name } from '@jsmini/clone';
 如果你是requirejs环境
 
 ```js
-requirejs(['node_modules/@jsmini/clone/dist/index.aio.js'], function (jsmini_clone) {
+requirejs(
+  ['node_modules/@jsmini/clone/dist/index.aio.js'],
+  function (jsmini_clone) {
     var name = jsmini_clone.name;
-})
+  },
+);
 ```
 
 如果你是浏览器环境
@@ -64,7 +69,7 @@ requirejs(['node_modules/@jsmini/clone/dist/index.aio.js'], function (jsmini_clo
 <script src="node_modules/@jsmini/clone/dist/index.aio.js"></script>
 
 <script>
-    var name = jsmini_clone.name;
+  var name = jsmini_clone.name;
 </script>
 ```
 
@@ -73,7 +78,8 @@ requirejs(['node_modules/@jsmini/clone/dist/index.aio.js'], function (jsmini_clo
 - [API](https://github.com/jsmini/clone/blob/master/doc/api.md)
 - [深拷贝的终极探索](https://yanhaijing.com/javascript/2018/10/10/clone-deep/)
 
-## 贡献指南  ![PRs welcome](<https://img.shields.io/badge/PRs-welcome-brightgreen.svg>)
+## 贡献指南 ![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+
 首次运行需要先安装依赖
 
 ```bash
@@ -116,12 +122,15 @@ $ npm run rename # 重命名命令
 ```
 
 ## 贡献者列表
+
 [contributors](https://github.com/jsmini/clone/graphs/contributors)
 
 ## 更新日志
+
 [CHANGELOG.md](https://github.com/jsmini/clone/blob/master/CHANGELOG.md)
 
 ## 计划列表
+
 [TODO.md](https://github.com/jsmini/clone/blob/master/TODO.md)
 
 ## 谁在使用

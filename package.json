@@ -1,24 +1,37 @@
 {
   "name": "@jsmini/clone",
   "version": "0.4.2",
-  "description": "最好用的js第三方库脚手架",
+  "description": "A professional deep clone library",
   "main": "dist/index.js",
-  "jsnext:main": "dist/index.esm.js",
   "module": "dist/index.esm.js",
   "sideEffects": false,
+  "exports": {
+    "node": {
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js"
+    },
+    "default": {
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
     "rename": "node rename.js",
     "clean": "rimraf ./dist",
-    "lint": "eslint -c .eslintrc.js 'src/**/*.js'",
-    "build:self": "rollup -c config/rollup.config.js",
-    "build:esm": "rollup -c config/rollup.config.esm.js",
-    "build:aio": "rollup -c config/rollup.config.aio.js",
-    "build": "npm run clean && npm run build:self && npm run build:esm && npm run build:aio && npm run build:aio.min",
-    "test": "npm run lint && cross-env NODE_ENV=test nyc mocha",
+    "lint": "eslint -c .eslintrc.cjs 'src/**/*.js'",
+    "build:self": "rollup -c config/rollup.config.cjs",
+    "build:esm": "rollup -c config/rollup.config.esm.cjs",
+    "build:aio": "rollup -c config/rollup.config.aio.cjs",
+    "build": "npm run clean && npm run build:self && npm run build:esm && npm run build:aio",
+    "test": "cross-env NODE_ENV=test nyc mocha",
     "release": "npm test && npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags",
-    "lint:fix": "eslint --fix -c .eslintrc.js 'src/**/*.js' --fix",
-    "build:aio.min": "cross-env NODE_ENV=production npm run build:aio",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls"
+    "lint:fix": "eslint --fix -c .eslintrc.cjs 'src/**/*.js' --fix",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "preinstall": "npx only-allow npm",
+    "start": "http-server -p 3000 -c-1",
+    "prepare": "husky install",
+    "ci": "commit",
+    "cz": "git-cz"
   },
   "author": "yanhaijing",
   "license": "MIT",
@@ -29,42 +42,62 @@
   "bugs": {
     "url": "https://github.com/jsmini/clone/issues"
   },
-  "devDependencies": {
-    "babel-core": "6.26.0",
-    "babel-plugin-transform-runtime": "6.23.0",
-    "babel-preset-env": "1.6.1",
-    "cdkit": "1.1.0",
-    "es5-shim": "4.5.10",
-    "eslint": "^5.15.1",
-    "expect.js": "0.3.1",
-    "mocha": "3.5.3",
-    "rimraf": "2.6.2",
-    "rollup": "0.57.1",
-    "rollup-plugin-babel": "^4.0.3",
-    "rollup-plugin-commonjs": "8.3.0",
-    "rollup-plugin-node-resolve": "3.0.3",
-    "@js-lib/cli": "^1.4.2",
-    "cross-env": "5.2.0",
-    "@babel/cli": "7.1.5",
-    "@babel/core": "^7.1.2",
-    "@babel/plugin-transform-runtime": "^7.1.0",
-    "@babel/preset-env": "^7.1.0",
-    "rollup-plugin-uglify": "1.0.0",
-    "@babel/register": "7.0.0",
-    "babel-plugin-istanbul": "5.1.0",
-    "coveralls": "3.0.2",
-    "nyc": "13.1.0",
-    "source-map-support": "0.5.9"
-  },
-  "dependencies": {
-    "@babel/runtime": "^7.1.2",
-    "@jsmini/type": "^0.9.1"
-  },
   "files": [
     "/dist",
+    "/types",
     "*.d.ts"
   ],
   "engines": {
-    "node": ">= 0.12.0"
+    "node": ">=18.18.0 <19.0.0",
+    "npm": ">=9.8.1 <10.0.0"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/cz-commitlint"
+    }
+  },
+  "dependencies": {
+    "@jsmini/type": "^0.10.0"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-runtime": "6.23.0",
+    "cdkit": "1.1.0",
+    "es5-shim": "^4.6.7",
+    "eslint": "^8.49.0",
+    "expect.js": "^0.3.1",
+    "mocha": "^10.2.0",
+    "rimraf": "^5.0.1",
+    "rollup": "^3.29.2",
+    "@js-lib/cli": "^2.2.1",
+    "cross-env": "^7.0.3",
+    "@babel/plugin-transform-runtime": "^7.22.15",
+    "@babel/preset-env": "^7.22.20",
+    "@babel/register": "^7.22.15",
+    "babel-plugin-istanbul": "^6.1.1",
+    "coveralls": "^3.1.1",
+    "nyc": "^15.1.0",
+    "source-map-support": "0.5.9",
+    "http-server": "^14.1.1",
+    "@babel/eslint-parser": "^7.22.15",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^14.0.1",
+    "prettier": "3.0.3",
+    "commitizen": "^4.2.4",
+    "@commitlint/cli": "^16.2.1",
+    "@commitlint/config-conventional": "^16.2.1",
+    "@commitlint/cz-commitlint": "^16.2.1",
+    "@commitlint/format": "12.1.1",
+    "@commitlint/prompt-cli": "^16.2.1",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-commonjs": "^25.0.4",
+    "@rollup/plugin-node-resolve": "^15.2.1",
+    "@rollup/plugin-terser": "^0.4.3"
   }
 }

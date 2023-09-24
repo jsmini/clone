@@ -1,20 +1,28 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     <script src="../dist/index.aio.js"></script>
     <script src="js/comm.js"></script>
     <script>
-        var data = createData(1000*20, 0);
+      var data = createData(1000 * 20, 0);
 
-        safeRun('cloneLoop', function () { cloneLoop(data) });
-        // 层级多了会卡死，日
-        safeRun('cloneForce', function () { cloneForce(data) });
-        safeRun('clone', function () { clone(data) });
-        safeRun('cloneJSON', function () { cloneJSON(data) });
+      safeRun('cloneLoop', function () {
+        cloneLoop(data);
+      });
+      // 层级多了会卡死，日
+      safeRun('cloneForce', function () {
+        cloneForce(data);
+      });
+      safeRun('clone', function () {
+        clone(data);
+      });
+      safeRun('cloneJSON', function () {
+        cloneJSON(data);
+      });
     </script>
-</body>
+  </body>
 </html>
